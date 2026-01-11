@@ -65,15 +65,23 @@
     /** Removes the given name from the follows list of this user. If successful, returns true.
      *  If the name is not in the list, does nothing and returns false. */
     public boolean removeFollowee(String name) {
-        if(! follows(name)){
+        if(!follows(name)){
             return false;
         }
-        for (int i=0; i<fCount-1; i++){
-            if (getfFollows()[i].equals(name)){
-                getfFollows()[i] = null;
+        // Find the index of the name to remove
+        int indexToRemove = -1;
+        for (int i = 0; i < fCount; i++){
+            if (follows[i].equals(name)){
+                indexToRemove = i;
+                break;
             }
         }
-        // need to move indexes!!!!!
+        // Shift all elements after the removed element one position to the left
+        for (int i = indexToRemove; i < fCount - 1; i++){
+            follows[i] = follows[i + 1];
+        }
+        // Set the last position to null
+        follows[fCount - 1] = null;
         fCount--;
         return true;
     }
@@ -81,15 +89,12 @@
     /** Counts the number of users that both this user and the other user follow.
     /*  Notice: This is the size of the intersection of the two follows lists. */
     public int countMutual(User other) {
-        int count=0, f_cont = this.fCount;
-         if (this.fCount > other.fCount){
-            f_cont = other.fCount;
-         }
-         for(int i=0; i <f_cont; i++){
+        int count = 0;
+        for(int i = 0; i < this.fCount; i++){
             if (other.follows(this.follows[i])){
                 count++;
             }
-         }
+        }
         return count;
     }
 
